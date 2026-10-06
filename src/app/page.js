@@ -1,57 +1,95 @@
 //import Image from "next/image";
 "use client";
 import { useState } from "react";
+import Alumno from "./alumno";
 
 export default function Home() {
   const [mensaje, setMensaje] = useState("");
 
-  let alumnos = [
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [carrera, setCarrera] = useState("");
+  const [activo, setActivo] = useState(true);
+  const [calificacion, setCalificacion] = useState("");
+
+  const [mostrarCalificacion, setMostrarCalificacion] = useState(false);
+
+  const [alumnos, setAlumnos] = useState([
     {
       nombre: "Carlos Hector",
       apellido: "Leal Delgado",
-      carrera: "LCC"
+      carrera: "LCC",
+      activo: true,
+      calificacion: 100
     },
     {
       nombre: "Alexis Felipe",
       apellido: "Elorza Obregón",
-      carrera: "LCC"
+      carrera: "LCC",
+      activo: false,
+      calificacion: 90
     },
     {
       nombre: "Axel Gabriel ",
       apellido: "Gutiérrez Ruano",
-      carrera: "LCC"
+      carrera: "LCC",
+      activo: true,
+      calificacion: 80
     },
     {
       nombre: "Eder Abraham",
       apellido: "Sampayo Gonzalez",
-      carrera: "LCC"
+      carrera: "LCC",
+      activo: false,
+      calificacion: 70
     },
     {
       nombre: "Edgar Aurelio",
       apellido: "Santiago Santiago",
-      carrera: "LCC"
+      carrera: "LCC",
+      activo: true,
+      calificacion: 60
     },
     {
       nombre: "Carlos Hector",
       apellido: "De León Salcedo",
-      carrera: "LCC"
+      carrera: "LCC",
+      activo: false,
+      calificacion: 50
     },
     {
       nombre: "Mayela Mayte",
       apellido: "Lopez Cerino",
-      carrera: "LCC"
+      carrera: "LCC",
+      activo: true,
+      calificacion: 40
     },
     {
       nombre: "Rodrigo",
       apellido: "Lopez Escobedo",
-      carrera: "LCC"
+      carrera: "LCC",
+      activo: false,
+      calificacion: 30
     },
     {
       nombre: "Emiliano",
       apellido: "Chacon Alvarez",
-      carrera: "LCC"
-    }
-  ];
+      carrera: "LCC",
+      activo: true,
+      calificacion: 85
+    }]);
+
+    const agregarAlumno = () => {
+    const nuevoAlumno = {
+      nombre: nombre,
+      apellido: apellido,
+      carrera: carrera,
+      activo: activo,
+      calificacion: Number(calificacion)
+    };
+
+    setAlumnos([...alumnos, nuevoAlumno]);
+};
 
   return (
     <div>
@@ -59,34 +97,69 @@ export default function Home() {
 
       <section>
         <h2>Agregar alumno</h2>
+        
         <label htmlFor="nombre">Nombre de alumno:</label>
-        <input id="nombre"/>
+        <input id="nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        
         <label htmlFor="apellido">Apellido de alumno:</label>
-        <input id="apellido"/>
+        <input id="apellido" value={apellido} onChange={(e) => setApellido(e.target.value)} />
+        
         <label htmlFor="carrera">Carrera de alumno:</label>
-        <input id="carrera"/>
+        <input id="carrera" value={carrera} onChange={(e) => setCarrera(e.target.value)} />
+        
+        <label htmlFor="activo">Estatus de alumno:</label>
+        <select id="activo" value={activo} onChange={(e) => setActivo(e.target.value === "true")}>
+        <option value="true">Activo</option>
+        <option value="false">Inactivo</option>
+        </select>
+
+        <label htmlFor="calificacion">Calificación de alumno:</label>
+        <input id="calificacion" value={calificacion} onChange={(e) => setCalificacion(e.target.value)} />
+        
+        <button onClick={agregarAlumno}>Agregar alumno</button>
+
+        <button onClick={() => setMostrarCalificacion(!mostrarCalificacion)}>
+          {mostrarCalificacion ? "Ocultar calificaciones" : "Mostrar calificaciones"}
+        </button>
       </section>
-      <table>
+      
+      <table id="alumnosPresentes">
         <thead>
           <tr>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Carrera</th>
+            {mostrarCalificacion && (
+              <th>Calificación</th>
+            )}
           </tr>
         </thead>
         <tbody>
         {
-          alumnos.map((alumno) => (
-            <tr key={alumno.nombre}>
-              <div className="flexbox flex-row">
-                <img src="student.jpg" width="50" height="50" className="estudianteAvatar"/>
-                <span>{alumno.nombre}</span>
-              </div>
-              <td>{alumno.apellido}</td>
-              <td>{alumno.carrera}</td>
-            </tr>
+          alumnos.filter((a) => a.activo === true && (mostrarCalificacion || a.calificacion >= 70)).map((a) => (
+            <Alumno alumno={a} mostrarCalificacion={mostrarCalificacion}></Alumno>
           ))
         }
+        </tbody>
+      </table>
+
+      <table id="alumnosAusentes">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Carrera</th>
+            {mostrarCalificacion && (
+              <th>Calificación</th>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {
+            alumnos.filter((a) => a.activo === false && (mostrarCalificacion || a.calificacion >= 70)).map((a) => (
+              <Alumno alumno={a} mostrarCalificacion={mostrarCalificacion}></Alumno>
+            ))
+          }
         </tbody>
       </table>
     </div>
