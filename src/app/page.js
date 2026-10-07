@@ -12,12 +12,21 @@ export default function Home() {
   const [activo, setActivo] = useState(true);
   const [calificacion, setCalificacion] = useState("");
 
+  const [busqueda, setBusqueda] = useState("");
+
   const [mostrarCalificacion, setMostrarCalificacion] = useState(false);
 
   const [alumnos, setAlumnos] = useState([
     {
       nombre: "Carlos Hector",
       apellido: "Leal Delgado",
+      carrera: "LCC",
+      activo: true,
+      calificacion: 100
+    },
+    {
+      nombre: "Carlos Pedro",
+      apellido: "Lopez Gonzalez",
       carrera: "LCC",
       activo: true,
       calificacion: 100
@@ -97,6 +106,10 @@ export default function Home() {
     )
   })
 
+  useEffect(() => {
+    console.log("Buscando a:", busqueda);
+  }, [busqueda]);
+
   return (
     <div>
       <h1>Alumnos</h1>
@@ -127,6 +140,9 @@ export default function Home() {
         <button onClick={() => setMostrarCalificacion(!mostrarCalificacion)}>
           {mostrarCalificacion ? "Ocultar calificaciones" : "Mostrar calificaciones"}
         </button>
+
+        <label htmlFor="busqueda">Buscar alumno:</label>
+        <input id="busqueda" value={busqueda} onChange={(e) => setBusqueda(e.target.value)}/>
       </section>
       
       <table id="alumnosPresentes">
@@ -142,7 +158,7 @@ export default function Home() {
         </thead>
         <tbody>
         {
-          alumnos.filter((a) => a.activo === true && (mostrarCalificacion || a.calificacion >= 70)).map((a) => (
+          alumnos.filter((a) => a.activo === true && (mostrarCalificacion || a.calificacion >= 70) && a.nombre.toLowerCase().includes(busqueda.toLowerCase())).map((a) => (
             <Alumno key={a.nombre + a.apellido} alumno={a} mostrarCalificacion={mostrarCalificacion}></Alumno>
           ))
         }
@@ -162,7 +178,7 @@ export default function Home() {
         </thead>
         <tbody>
           {
-            alumnos.filter((a) => a.activo === false && (mostrarCalificacion || a.calificacion >= 70)).map((a) => (
+            alumnos.filter((a) => a.activo === false && (mostrarCalificacion || a.calificacion >= 70) && a.nombre.toLowerCase().includes(busqueda.toLowerCase())).map((a) => (
               <Alumno key={a.nombre + a.apellido} alumno={a} mostrarCalificacion={mostrarCalificacion}></Alumno>
             ))
           }
