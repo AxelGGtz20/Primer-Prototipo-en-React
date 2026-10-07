@@ -3,7 +3,7 @@
 export default function Alumno({ alumno, mostrarCalificacion }) {
     return (
         <tr>
-            <td key={alumno.nombre}>
+            <td>
                 <div className="flexbox flex-row">
                     <img src="student.jpg" width="50" height="50" className="estudianteAvatar"/>
                     <span>{alumno.nombre}</span>

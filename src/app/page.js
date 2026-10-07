@@ -1,6 +1,6 @@
 //import Image from "next/image";
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Alumno from "./alumno";
 
 export default function Home() {
@@ -51,8 +51,8 @@ export default function Home() {
       calificacion: 60
     },
     {
-      nombre: "Carlos Hector",
-      apellido: "De León Salcedo",
+      nombre: "Diego Alonso",
+      apellido: "Villanueva García",
       carrera: "LCC",
       activo: false,
       calificacion: 50
@@ -79,7 +79,7 @@ export default function Home() {
       calificacion: 85
     }]);
 
-    const agregarAlumno = () => {
+  const agregarAlumno = () => {
     const nuevoAlumno = {
       nombre: nombre,
       apellido: apellido,
@@ -89,7 +89,13 @@ export default function Home() {
     };
 
     setAlumnos([...alumnos, nuevoAlumno]);
-};
+  };
+
+  useEffect(() => {
+    console.log(
+      mostrarCalificacion ? "Se muestran los reprobados" : "Se ocultan los reprobados"
+    )
+  })
 
   return (
     <div>
@@ -137,7 +143,7 @@ export default function Home() {
         <tbody>
         {
           alumnos.filter((a) => a.activo === true && (mostrarCalificacion || a.calificacion >= 70)).map((a) => (
-            <Alumno alumno={a} mostrarCalificacion={mostrarCalificacion}></Alumno>
+            <Alumno key={a.nombre + a.apellido} alumno={a} mostrarCalificacion={mostrarCalificacion}></Alumno>
           ))
         }
         </tbody>
@@ -157,7 +163,7 @@ export default function Home() {
         <tbody>
           {
             alumnos.filter((a) => a.activo === false && (mostrarCalificacion || a.calificacion >= 70)).map((a) => (
-              <Alumno alumno={a} mostrarCalificacion={mostrarCalificacion}></Alumno>
+              <Alumno key={a.nombre + a.apellido} alumno={a} mostrarCalificacion={mostrarCalificacion}></Alumno>
             ))
           }
         </tbody>
