@@ -100,6 +100,18 @@ export default function Home() {
     setAlumnos([...alumnos, nuevoAlumno]);
   };
 
+  const alumnosActivos = alumnos.filter((a) =>
+    a.activo === true &&
+    (mostrarCalificacion || a.calificacion >= 70) &&
+    a.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
+  const alumnosInactivos = alumnos.filter((a) =>
+    a.activo === false &&
+    (mostrarCalificacion || a.calificacion >= 70) &&
+    a.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
   useEffect(() => {
     console.log(
       mostrarCalificacion ? "Se muestran los reprobados" : "Se ocultan los reprobados"
@@ -157,11 +169,17 @@ export default function Home() {
           </tr>
         </thead>
         <tbody>
-        {
-          alumnos.filter((a) => a.activo === true && (mostrarCalificacion || a.calificacion >= 70) && a.nombre.toLowerCase().includes(busqueda.toLowerCase())).map((a) => (
-            <Alumno key={a.nombre + a.apellido} alumno={a} mostrarCalificacion={mostrarCalificacion}></Alumno>
-          ))
-        }
+          {
+            alumnosActivos.length === 0
+              ? <tr><td colSpan={mostrarCalificacion ? 4 : 3}>No hay alumnos</td></tr>
+              : alumnosActivos.map((a) => (
+                  <Alumno
+                    key={a.nombre + a.apellido}
+                    alumno={a}
+                    mostrarCalificacion={mostrarCalificacion}
+                  />
+                ))
+          }
         </tbody>
       </table>
 
@@ -178,9 +196,15 @@ export default function Home() {
         </thead>
         <tbody>
           {
-            alumnos.filter((a) => a.activo === false && (mostrarCalificacion || a.calificacion >= 70) && a.nombre.toLowerCase().includes(busqueda.toLowerCase())).map((a) => (
-              <Alumno key={a.nombre + a.apellido} alumno={a} mostrarCalificacion={mostrarCalificacion}></Alumno>
-            ))
+            alumnosInactivos.length === 0
+              ? <tr><td colSpan={mostrarCalificacion ? 4 : 3}>No hay alumnos</td></tr>
+              : alumnosInactivos.map((a) => (
+                  <Alumno
+                    key={a.nombre + a.apellido}
+                    alumno={a}
+                    mostrarCalificacion={mostrarCalificacion}
+                  />
+                ))
           }
         </tbody>
       </table>
